@@ -3,19 +3,22 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { Body, Delete, Get, Post, Put } from '@nestjs/common';
 import { UserDto } from './dtos/create-user.dto';
 import { UserService } from './user.service';
 import { updateUser } from './dtos/update-user.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 // import { TransformInterceptor } from './transform.interceptore';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get()
+  @Get('/users')
+  @UseGuards(AuthGuard)
   async getUsers() {
     const users = await this.userService.getUsers();
     return users;
