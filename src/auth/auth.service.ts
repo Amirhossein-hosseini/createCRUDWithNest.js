@@ -1,7 +1,11 @@
 import { UserDto } from './../user/dtos/create-user.dto';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from './../../prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -15,7 +19,6 @@ export class AuthService {
         name: user.name,
         email: user.email,
         password,
-        
       },
       select: {
         id: true,
@@ -24,5 +27,20 @@ export class AuthService {
       }
     });
     return users;
+  }
+
+  async validateUser(email: string, password: string){
+    const user = await this.PrismaService.user.findUnique({
+      where:{
+        email
+      }
+    });
+    if (!user) {
+      throw new BadRequestException();
+    }
+    if (!(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException();
+    }
+    return user;
   }
 }
