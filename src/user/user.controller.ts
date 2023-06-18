@@ -17,7 +17,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get('/users')
+  @Get()
   @UseGuards(AuthGuard)
   async getUsers() {
     const users = await this.userService.getUsers();

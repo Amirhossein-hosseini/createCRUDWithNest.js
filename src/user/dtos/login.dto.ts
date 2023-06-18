@@ -10,5 +10,6 @@ export class loginDto {
   @IsString()
   @MinLength(5)
   password: string;
-  //   role?: string = 'USER'
+  
+    role?: string = 'USER'
 }
